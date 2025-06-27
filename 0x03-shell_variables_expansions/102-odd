@@ -1,2 +1,2 @@
 #!/bin/bash
-awk 'NR % 2 == 1'
+python3 -c "import sys; [print(l, end='') for i, l in enumerate(sys.stdin) if i % 2 == 0]"
