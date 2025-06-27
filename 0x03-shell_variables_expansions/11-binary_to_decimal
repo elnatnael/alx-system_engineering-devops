@@ -1,10 +1,2 @@
 #!/bin/bash
-
-# Check if BINARY is set
-if [ -z "$BINARY" ]; then
-    echo "BINARY environment variable is not set"
-    exit 1
-fi
-
-# Convert from binary to decimal using built-in shell arithmetic
 echo "$((2#$BINARY))"
