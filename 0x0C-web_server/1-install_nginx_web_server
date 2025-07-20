@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-# Script to install and configure Nginx with Hello World page
+# Installs Nginx and sets up a Hello World page at /
 
-# Exit on any error
 set -e
 
-# Install nginx non-interactively
+# Update and install Nginx
 apt-get update -y
 apt-get install nginx -y
 
-# Create custom HTML page
-echo "Hello World!" > /var/www/html/index.nginx-debian.html
+# Replace the default index page with "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
 
-# Start nginx without using systemctl
+# Start Nginx using service (not systemctl)
 service nginx start
