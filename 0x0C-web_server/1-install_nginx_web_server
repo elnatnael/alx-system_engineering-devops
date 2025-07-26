@@ -1,14 +1,14 @@
-#!/usr/bin/env bash
-# Installs Nginx and sets up a Hello World page at /
+#!/bin/bash
+# 1-install_nginx_web_server
+# Install nginx, configure it to serve "Hello World!" on port 80
+# No systemctl usage allowed for restart (use service command instead)
 
-set -e
-
-# Update and install Nginx
+# Update package list and install nginx silently with -y
 apt-get update -y
-apt-get install nginx -y
+apt-get install -y nginx
 
-# Replace the default index page with "Hello World!"
+# Replace the default nginx index.html with "Hello World!"
 echo "Hello World!" > /var/www/html/index.html
 
-# Start Nginx using service (not systemctl)
-service nginx start
+# Restart nginx using service (not systemctl)
+service nginx restart
