@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# This script sets up a new Ubuntu 16.04 server with Nginx and a custom HTTP response header
+
+# Update and install Nginx
+apt-get update
+apt-get install -y nginx
+
+# Set hostname as per server (you can pass this as an argument if needed)
+# hostnamectl set-hostname <your-id>-web-01 or web-02 manually before running this
+
+# Configure custom header in Nginx default site
+sed -i '/location \/ {/a \\tadd_header X-Served-By $hostname;' /etc/nginx/sites-available/default
+
+# Restart Nginx to apply changes
+service nginx restart
