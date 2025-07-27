@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
-# Install nginx and configure it to serve "Hello World!" on port 80
+# Installs Nginx, sets up a Hello World page, and starts the service without systemctl
 
-# Update packages silently
-apt-get update -y > /dev/null 2>&1
+set -e
 
-# Install nginx silently
-apt-get install -y nginx > /dev/null 2>&1
+# Update package list and install nginx
+apt-get update -y
+apt-get install -y nginx
 
-# Overwrite default nginx page with Hello World!
+# Create custom index.html
 echo "Hello World!" > /var/www/html/index.html
 
-# Restart nginx without systemctl, suppress output
-service nginx restart > /dev/null 2>&1
+# Start nginx using service (not systemctl)
+service nginx start || /etc/init.d/nginx start
+
+# Ensure nginx is enabled to start on boot using update-rc.d (if not using systemctl)
+update-rc.d nginx defaults
