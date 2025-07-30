@@ -24,9 +24,11 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 echo -e "Hello World!" | dd  status=none of=/var/www/html/index.nginx-debian.html
 
 #404 page not found 
-echo " Ceci n'est pas une page">> /var/www/html/error_404.html
-sudo sed -i '255\   error_page 404 /error_404.html;' /etc/nginx/sites-available/default
-
+echo " Ceci n'est pas une page" > /var/www/html/error_404.html
+CONFIG="/etc/nginx/sites-available/default"
+if ! grep -q "error_page 404 /custom_404.html;" "$CONFIG"; then
+  sudo sed -i '/location \/ {/a \\terror_page 404 /custom_404.html;\n\tlocation = /custom_404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}' "$CONFIG"
+fi
 #restarting nginx 
 sudo service nginx restart 
 echo -e "\nCompleted :)) "
