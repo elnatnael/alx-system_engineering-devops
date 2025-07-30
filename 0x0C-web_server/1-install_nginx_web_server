@@ -1,17 +1,28 @@
 #!/usr/bin/env bash
 # Installs Nginx, sets up a Hello World page, and starts the service without systemctl
 
-set -e
+echo  -e " updating and installing nginx usinf sudo  apt-get. \n"
 
 # Update package list and install nginx
-apt-get update -y
-apt-get install -y nginx
+sudo apt-get update -y -qq && \
+         sudo apt-get install -y nginx
 
-# Create custom index.html
-echo "Hello World!" > /var/www/html/index.html
 
 # Start nginx using service (not systemctl)
-service nginx start || /etc/init.d/nginx start
+sudo  service  nginx start 
 
-# Ensure nginx is enabled to start on boot using update-rc.d (if not using systemctl)
-update-rc.d nginx defaults
+# allowing nginx on firewall
+sudo ufw  allow 'Nginx HTTP'
+
+# giving the user ownership to website files for easy editing 
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+
+#Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+#creating new custom  index 
+echo -e "Hello world!" | dd  status=none of=/var/www/html/index.nginx-debian.html
+
+#restartning nginx 
+sudo service nginx restart 
+echo -e "\nCompleted :)) "
