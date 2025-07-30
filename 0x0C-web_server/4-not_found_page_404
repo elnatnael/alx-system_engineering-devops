@@ -1,34 +1,38 @@
 #!/usr/bin/env bash
 # Installs Nginx, sets up a Hello World page, and starts the service without systemctl
 
-echo  -e " updating and installing nginx usinf sudo  apt-get. \n"
+echo -e "Updating and installing nginx using sudo apt-get.\n"
 
 # Update package list and install nginx
 sudo apt-get update -y -qq && \
-         sudo apt-get install -y nginx
-
+sudo apt-get install -y nginx
 
 # Start nginx using service (not systemctl)
-sudo  service  nginx start 
+sudo service nginx start
 
-# allowing nginx on firewall
-sudo ufw  allow 'Nginx HTTP'
+# Allowing nginx on firewall
+sudo ufw allow 'Nginx HTTP'
 
-# giving the user ownership to website files for easy editing 
+# Giving the user ownership to website files for easy editing
 sudo chown -R "$USER":"$USER" /var/www/html
 sudo chmod -R 755 /var/www
 
-#Backup default index
+# Backup default index
 cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
-#creating new custom  index 
-echo -e "Hello World!" | dd  status=none of=/var/www/html/index.nginx-debian.html
 
-#404 page not found 
-echo " Ceci n'est pas une page" > /var/www/html/error_404.html
+# Creating new custom index
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
+# 404 page content (EXACTLY as required)
+echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
+
+# Nginx config update for custom 404 page
 CONFIG="/etc/nginx/sites-available/default"
 if ! grep -q "error_page 404 /custom_404.html;" "$CONFIG"; then
-  sudo sed -i '/location \/ {/a \\terror_page 404 /custom_404.html;\n\tlocation = /custom_404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}' "$CONFIG"
+  sudo sed -i '/location \/ {/a \\\terror_page 404 /custom_404.html;\n\tlocation = /custom_404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}' "$CONFIG"
 fi
-#restarting nginx 
-sudo service nginx restart 
-echo -e "\nCompleted :)) "
+
+# Restarting nginx
+sudo service nginx restart
+
+echo -e "\nCompleted :))"
