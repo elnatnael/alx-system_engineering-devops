@@ -21,7 +21,7 @@ sudo chmod -R 755 /var/www
 #Backup default index
 cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
 #creating new custom  index 
-echo -e "Hello world!" | dd  status=none of=/var/www/html/index.nginx-debian.html
+echo -e "Hello World!" | dd  status=none of=/var/www/html/index.nginx-debian.html
 
 #restartning nginx 
 sudo service nginx restart 
