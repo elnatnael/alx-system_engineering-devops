@@ -11,15 +11,14 @@ sudo service nginx start
 # Allow HTTP traffic through UFW
 sudo ufw allow 'Nginx HTTP'
 
-# Add redirect configuration to default site
+# Define config file
 CONFIG="/etc/nginx/sites-available/default"
 
+# Only add the redirect if not already present
 if ! grep -q "location /redirect_me" "$CONFIG"; then
-  sudo sed -i '/location \/ {/i \
-location /redirect_me {\
-    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\
-}' "$CONFIG"
+  sudo sed -i '/location \/ {/i location /redirect_me {\n    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n}' "$CONFIG"
 fi
 
+# Test and restart Nginx
 sudo nginx -t || { echo "Nginx config test failed"; exit 1; }
 sudo service nginx restart
