@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Sets up a 301 redirect for /redirect_me using Nginx on a new Ubuntu machine
+#page redirect
 
 # Install Nginx
 sudo apt-get update -y -qq
