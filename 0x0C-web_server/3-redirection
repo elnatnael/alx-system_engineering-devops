@@ -14,10 +14,12 @@ sudo ufw allow 'Nginx HTTP'
 # Add redirect configuration to default site
 CONFIG="/etc/nginx/sites-available/default"
 
-# Add redirect if not already present
 if ! grep -q "location /redirect_me" "$CONFIG"; then
-  sudo sed -i '/server_name _;/a \\\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n\t}' "$CONFIG"
+  sudo sed -i '/location \/ {/i \
+location /redirect_me {\
+    return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\
+}' "$CONFIG"
 fi
 
-# Restart Nginx
+sudo nginx -t || { echo "Nginx config test failed"; exit 1; }
 sudo service nginx restart
