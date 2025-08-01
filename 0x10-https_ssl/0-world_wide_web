@@ -1,16 +1,28 @@
 #!/usr/bin/env bash
-# print domains and subdomains
+# Script to audit DNS subdomain records
 
-print_domain_subdomain () {
-    dig "$1" | grep -A1 'ANSWER SECTION:' | sed -r "s/$1./$2/g" | awk -F" " ' NR==2 { print "The subdomain " $1 " is a " $4 " record and points to " $5 }'
+print_subdomain_info() {
+    local domain="$1"
+    local sub="$2"
+    local fqdn="${sub}.${domain}"
+
+    record=$(dig +short "$fqdn" | head -n1)
+
+    if [ -n "$record" ]; then
+        echo "The subdomain ${sub} is a A record and points to ${record}"
+    else
+        echo "The subdomain ${sub} could not be resolved"
+    fi
 }
 
-if [ "$#" -eq 2 ]
-then
-    print_domain_subdomain "$2.$1" "$2"
+domain="$1"
+subdomain="$2"
+
+if [ -z "$subdomain" ]; then
+    print_subdomain_info "$domain" "www"
+    print_subdomain_info "$domain" "lb-01"
+    print_subdomain_info "$domain" "web-01"
+    print_subdomain_info "$domain" "web-02"
 else
-    print_domain_subdomain "www.$1" "www"
-    print_domain_subdomain "lb-01.$1" "lb-01"
-    print_domain_subdomain "web-01.$1" "web-01"
-    print_domain_subdomain "web-02.$1" "web-02"
+    print_subdomain_info "$domain" "$subdomain"
 fi
