@@ -1,28 +1,24 @@
-#!/usr/bin/env bash
-# Script to audit DNS subdomain records
+#!/bin/bash
 
-print_subdomain_info() {
-    local domain="$1"
-    local sub="$2"
-    local fqdn="${sub}.${domain}"
-
-    record=$(dig +short "$fqdn" | head -n1)
-
-    if [ -n "$record" ]; then
-        echo "The subdomain ${sub} is a A record and points to ${record}"
-    else
-        echo "The subdomain ${sub} could not be resolved"
-    fi
+# Function to extract A record info
+get_record_info() {
+    local full_subdomain=$1
+    dig $full_subdomain +short | awk '{print "The subdomain " subdomain " is a A record and points to " $1}' subdomain=$2
 }
 
-domain="$1"
-subdomain="$2"
+# Main logic
+domain=$1
+subdomain=$2
 
-if [ -z "$subdomain" ]; then
-    print_subdomain_info "$domain" "www"
-    print_subdomain_info "$domain" "lb-01"
-    print_subdomain_info "$domain" "web-01"
-    print_subdomain_info "$domain" "web-02"
+if [ -z "$domain" ]; then
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
+fi
+
+if [ -n "$subdomain" ]; then
+    get_record_info "$subdomain.$domain" "$subdomain"
 else
-    print_subdomain_info "$domain" "$subdomain"
+    for sd in www lb-01 web-01 web-02; do
+        get_record_info "$sd.$domain" "$sd"
+    done
 fi
