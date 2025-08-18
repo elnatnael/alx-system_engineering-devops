@@ -1,2 +1,2 @@
 #!/bin/bash
-expr "$(echo $WATER | tr 'wate' '0123')" + "$(echo $STIR | tr 'ti.r' '0123')" | tr '01234567' 'bestchol'
+expr $(echo $WATER | tr wate 0123) + $(echo $STIR | tr ti.r 0123) | tr 01234567 bestchol
