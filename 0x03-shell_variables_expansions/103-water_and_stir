@@ -1,2 +1,2 @@
 #!/bin/bash
-expr $(echo $WATER | tr wate 0123) + $(echo $STIR | tr ti.r 0123) | tr 01234567 bestchol
+python3 -c $'import os\nw,s,b,a1,a2=os.environ[\"WATER\"],os.environ[\"STIR\"],\"bestchol\",\"waetr\",\"tir.\"\nd=lambda x,a:sum(a.index(c)*len(a)**i for i,c in enumerate(x[::-1]))\ne=lambda n,a:\"\"if n==0 else e(n//len(a),a)+a[n%len(a)]\nprint(e(d(w,a1)+d(s,a2),b))'
